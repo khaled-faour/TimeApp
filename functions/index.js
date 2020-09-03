@@ -10,13 +10,3 @@ admin.initializeApp(functions.config().firebase);
 // });
 
 
-exports.createUserDocument = functions.auth.user().onCreate(async (user) => {
-    const addUserFirstTask = admin.firestore().collection("Users/" + user.uid + "/Category");
-    try {
-        await addUserFirstTask.add({
-            taskTitle: "First Task"
-        });
-    } catch (e) {
-        console.log(e);
-    }
-});

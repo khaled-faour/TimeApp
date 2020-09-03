@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:timeapp/src/Widget/bezierContainer.dart';
 import 'package:timeapp/src/Widget/entryField.dart';
 import 'package:timeapp/src/Widget/switchScreen.dart';
 import 'package:timeapp/src/Widget/title.dart';
-import 'package:timeapp/src/loginPage.dart';
 import 'package:timeapp/src/Widget/backButton.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:timeapp/src/homeScreen.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -51,24 +52,36 @@ class _SignUpPageState extends State<SignUpPage> {
               SnackBar(content: Text("Please fill all the fields"));
           return _scaffoldKey.currentState.showSnackBar(snackBar);
         }
-        setState(() {
-          _isLoading = true;
-        });
-        FirebaseUser user = (await FirebaseAuth.instance
-                .createUserWithEmailAndPassword(
-                    email: emailController.text,
-                    password: passwordController.text))
-            .user;
-        setState(() {
-          _isLoading = false;
-        });
-        if (user != null) {
-          final snackBar = SnackBar(content: Text("Welcome, ${user.email}"));
-          return _scaffoldKey.currentState.showSnackBar(snackBar);
-        } else {
-          final snackBar =
-              SnackBar(content: Text("Something went wron, please try again"));
-          return _scaffoldKey.currentState.showSnackBar(snackBar);
+        try {
+          setState(() {
+            _isLoading = true;
+          });
+          FirebaseUser user = (await FirebaseAuth.instance
+                  .createUserWithEmailAndPassword(
+                      email: emailController.text,
+                      password: passwordController.text))
+              .user;
+          setState(() {
+            _isLoading = false;
+          });
+          if (user != null) {
+            setState(() {
+              loggedInUser = user;
+            });
+            Navigator.pop(context);
+            Navigator.pushReplacementNamed(context, 'mainScreen');
+          } else {
+            final snackBar = SnackBar(
+                content: Text("Something went wrong, please try again"));
+            _scaffoldKey.currentState.showSnackBar(snackBar);
+          }
+        } on PlatformException catch (e) {
+          print(e.code);
+          setState(() {
+            _isLoading = false;
+          });
+          final snackBar = SnackBar(content: Text(e.code));
+          _scaffoldKey.currentState.showSnackBar(snackBar);
         }
       },
     );
@@ -126,10 +139,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       switchScreen(
                           context, 'Already have an account ?', 'Login',
                           onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LoginPage()));
+                        Navigator.pushReplacementNamed(context, 'loginScreen');
                       }),
                     ],
                   ),

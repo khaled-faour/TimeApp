@@ -1,12 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:timeapp/src/Widget/backButton.dart';
 import 'package:timeapp/src/Widget/entryField.dart';
 import 'package:timeapp/src/Widget/switchScreen.dart';
 import 'package:timeapp/src/Widget/title.dart';
-import 'package:timeapp/src/signup.dart';
-import 'package:timeapp/src/testScreen.dart';
 
 import 'Widget/bezierContainer.dart';
 
@@ -19,6 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  FirebaseUser user;
   bool _isLoading = false;
   Widget _submitButton() {
     return InkWell(
@@ -38,7 +38,10 @@ class _LoginPageState extends State<LoginPage> {
             gradient: LinearGradient(
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
-                colors: [Color(0xfffbb448), Color(0xfff7892b)])),
+                colors: [
+                  Theme.of(context).primaryColor,
+                  Theme.of(context).accentColor
+                ])),
         child: Text(
           'Login',
           style: TextStyle(fontSize: 20, color: Colors.white),
@@ -53,24 +56,29 @@ class _LoginPageState extends State<LoginPage> {
         setState(() {
           _isLoading = true;
         });
-        FirebaseUser user = (await FirebaseAuth.instance
-                .signInWithEmailAndPassword(
-                    email: emailController.text,
-                    password: passwordController.text))
-            .user;
+        try {
+          user = (await FirebaseAuth.instance.signInWithEmailAndPassword(
+                  email: emailController.text,
+                  password: passwordController.text))
+              .user;
+          if (user != null) {
+            final snackBar = SnackBar(content: Text("Welcome, ${user.email}"));
+            _scaffoldKey.currentState.showSnackBar(snackBar);
+            Navigator.pop(context);
+            Navigator.pushReplacementNamed(context, 'mainScreen');
+          } else {
+            final snackBar = SnackBar(
+                content: Text("Something went wron, please try again"));
+            _scaffoldKey.currentState.showSnackBar(snackBar);
+          }
+        } on PlatformException catch (e) {
+          print(e.code);
+          final snackBar = SnackBar(content: Text(e.code));
+          _scaffoldKey.currentState.showSnackBar(snackBar);
+        }
         setState(() {
           _isLoading = false;
         });
-        if (user != null) {
-          final snackBar = SnackBar(content: Text("Welcome, ${user.email}"));
-          _scaffoldKey.currentState.showSnackBar(snackBar);
-          return Navigator.push(
-              context, MaterialPageRoute(builder: (context) => TestScreen()));
-        } else {
-          final snackBar =
-              SnackBar(content: Text("Something went wron, please try again"));
-          return _scaffoldKey.currentState.showSnackBar(snackBar);
-        }
       },
     );
   }
@@ -127,10 +135,8 @@ class _LoginPageState extends State<LoginPage> {
                         switchScreen(
                             context, 'Don\'t have an account ?', "Register",
                             onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => SignUpPage()));
+                          Navigator.pushReplacementNamed(
+                              context, 'registerScreen');
                         }),
                       ],
                     ),
