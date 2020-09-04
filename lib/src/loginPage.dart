@@ -127,9 +127,15 @@ class _LoginPageState extends State<LoginPage> {
                         Container(
                           padding: EdgeInsets.symmetric(vertical: 10),
                           alignment: Alignment.centerRight,
-                          child: Text('Forgot Password ?',
-                              style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.w500)),
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                  context, 'forgotPasswordScreen');
+                            },
+                            child: Text('Forgot Password ?',
+                                style: TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.w500)),
+                          ),
                         ),
                         SizedBox(height: height * .055),
                         switchScreen(

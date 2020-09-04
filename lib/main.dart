@@ -1,10 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:timeapp/src/forgotPasswordPage.dart';
 import 'package:timeapp/src/loginPage.dart';
 import 'package:timeapp/src/signup.dart';
 import 'package:timeapp/src/homeScreen.dart';
 import 'src/welcomePage.dart';
+import 'package:page_transition/page_transition.dart';
 
 void main() => runApp(MyApp());
 
@@ -41,18 +43,45 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     return MaterialApp(
+      onGenerateRoute: (settings) {
+        switch (settings.name) {
+          case 'welcomeScreen':
+            return PageTransition(
+                child: WelcomePage(), type: PageTransitionType.fade);
+            break;
+          case 'loginScreen':
+            return PageTransition(
+                child: LoginPage(), type: PageTransitionType.fade);
+            break;
+          case 'registerScreen':
+            return PageTransition(
+                child: SignUpPage(), type: PageTransitionType.fade);
+            break;
+          case 'mainScreen':
+            return PageTransition(
+                child: HomeScreen(), type: PageTransitionType.fade);
+            break;
+          case 'forgotPasswordScreen':
+            return PageTransition(
+                child: ForgotPasswordScreen(), type: PageTransitionType.fade);
+            break;
+          default:
+            return null;
+        }
+      },
       routes: {
-        'welcomeScreen': (context) => WelcomePage(),
-        'loginScreen': (context) => LoginPage(),
-        'registerScreen': (context) => SignUpPage(),
-        'mainScreen': (context) => HomeScreen()
+        //'welcomeScreen': (context) => WelcomePage(),
+        //'loginScreen': (context) => LoginPage(),
+        //'registerScreen': (context) => SignUpPage(),
+        //'mainScreen': (context) => HomeScreen(),
+        //'forgotPasswordScreen': (context) => ForgotPasswordScreen()
       },
       theme: ThemeData(
         primaryColor: Color(0xfffbb448),
         accentColor: Color(0xffe46b10),
         primarySwatch: Colors.blue,
         textTheme: GoogleFonts.latoTextTheme(textTheme).copyWith(
-          body1: GoogleFonts.montserrat(textStyle: textTheme.body1),
+          bodyText2: GoogleFonts.montserrat(textStyle: textTheme.bodyText2),
         ),
       ),
       debugShowCheckedModeBanner: false,

@@ -1,19 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:timeapp/src/tasksScreen.dart';
 
 final _firestore = Firestore.instance;
 FirebaseUser loggedInUser;
 bool _isLoading = true;
 
-class HomeScreen extends StatefulWidget {
+class TasksScreen extends StatefulWidget {
+  final String documentID;
+
+  TasksScreen({Key key, this.documentID}) : super(key: key);
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _TasksScreenState createState() => _TasksScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _TasksScreenState extends State<TasksScreen> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   @override
   void initState() {
@@ -40,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Categories"),
+        title: Text("tasks"),
         centerTitle: true,
         actions: <Widget>[
           IconButton(
@@ -52,45 +53,51 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: _isLoading ? CircularProgressIndicator() : CategoriesList(),
+      body: _isLoading
+          ? CircularProgressIndicator()
+          : TasksList(
+              documentID: widget.documentID,
+            ),
     );
   }
 }
 
-class CategoriesList extends StatelessWidget {
+class TasksList extends StatelessWidget {
+  final String documentID;
+
+  TasksList({Key key, this.documentID}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-        stream: _firestore.collection("Categories").orderBy("name").snapshots(),
-        builder: buildCategoriesList);
+        stream: _firestore
+            .collection("Categories")
+            .document(documentID)
+            .collection("Tasks")
+            .snapshots(),
+        builder: buildTasksList);
   }
 }
 
-Widget buildCategoriesList(
+Widget buildTasksList(
     BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
   if (snapshot.hasData) {
+    print(snapshot.data.documents.toString());
     return ListView.builder(
         itemCount: snapshot.data.documents.length,
         itemBuilder: (context, index) {
-          DocumentSnapshot category = snapshot.data.documents[index];
+          DocumentSnapshot task = snapshot.data.documents[index];
           return ListTile(
             leading: Icon(Icons.category),
-            title: Text(category.data["name"]),
-            subtitle: Text("subtitle"),
+            title: Text(task.data["name"]),
+            subtitle: Text("Description"),
             trailing: Icon(Icons.chevron_right),
             onTap: () {
-              Navigator.push(
-                  context,
-                  PageTransition(
-                      type: PageTransitionType.fade,
-                      child: TasksScreen(
-                        documentID: category.documentID,
-                      )));
+              print(task.data["name"] + " tapped");
             },
           );
         });
-  } else if (snapshot.connectionState == ConnectionState.done &&
-      !snapshot.hasData) {
+  } else if (!snapshot.hasData) {
     return Text("No Categories");
   } else {
     return CircularProgressIndicator();
