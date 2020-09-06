@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:timeapp/main.dart';
 import 'package:timeapp/src/Widget/backButton.dart';
 import 'package:timeapp/src/Widget/entryField.dart';
 import 'package:timeapp/src/Widget/switchScreen.dart';
@@ -30,9 +31,11 @@ class _LoginPageState extends State<LoginPage> {
             borderRadius: BorderRadius.all(Radius.circular(5)),
             boxShadow: <BoxShadow>[
               BoxShadow(
-                  color: Colors.grey.shade200,
+                  color: isDark
+                      ? Theme.of(context).primaryColor.withAlpha(100)
+                      : Colors.grey.shade200,
                   offset: Offset(2, 4),
-                  blurRadius: 5,
+                  blurRadius: 8,
                   spreadRadius: 2)
             ],
             gradient: LinearGradient(
@@ -44,7 +47,8 @@ class _LoginPageState extends State<LoginPage> {
                 ])),
         child: Text(
           'Login',
-          style: TextStyle(fontSize: 20, color: Colors.white),
+          style: TextStyle(
+              fontSize: 20, color: isDark ? Colors.white70 : Colors.white),
         ),
       ),
       onTap: () async {
@@ -134,7 +138,11 @@ class _LoginPageState extends State<LoginPage> {
                             },
                             child: Text('Forgot Password ?',
                                 style: TextStyle(
-                                    fontSize: 14, fontWeight: FontWeight.w500)),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: isDark
+                                        ? Colors.white70
+                                        : Colors.black)),
                           ),
                         ),
                         SizedBox(height: height * .055),

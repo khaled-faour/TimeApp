@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:timeapp/main.dart';
 
 Widget switchScreen(BuildContext context, String text1, String text2,
     {Function() onTap}) {
@@ -13,7 +14,10 @@ Widget switchScreen(BuildContext context, String text1, String text2,
         children: <Widget>[
           Text(
             text1,
-            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+            style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: isDark ? Colors.white70 : Colors.black),
           ),
           SizedBox(
             width: 10,

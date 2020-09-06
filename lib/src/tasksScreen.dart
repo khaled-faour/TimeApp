@@ -81,24 +81,25 @@ class TasksList extends StatelessWidget {
 
 Widget buildTasksList(
     BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-  if (snapshot.hasData) {
-    print(snapshot.data.documents.toString());
+  if (!snapshot.hasData || snapshot.data.documents.isEmpty) {
+    return Text("No Tasks");
+  } else if (snapshot.hasData) {
     return ListView.builder(
         itemCount: snapshot.data.documents.length,
         itemBuilder: (context, index) {
           DocumentSnapshot task = snapshot.data.documents[index];
-          return ListTile(
-            leading: Icon(Icons.category),
-            title: Text(task.data["name"]),
-            subtitle: Text("Description"),
-            trailing: Icon(Icons.chevron_right),
-            onTap: () {
-              print(task.data["name"] + " tapped");
-            },
+          print(task.data.length);
+          return Card(
+            child: ListTile(
+              leading: Icon(Icons.track_changes),
+              title: Text(task.data["name"]),
+              subtitle: Text("Description"),
+              onTap: () {
+                print(task.data["name"] + " tapped");
+              },
+            ),
           );
         });
-  } else if (!snapshot.hasData) {
-    return Text("No Categories");
   } else {
     return CircularProgressIndicator();
   }

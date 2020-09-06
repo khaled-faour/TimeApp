@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../main.dart';
+
 Widget title(BuildContext context) {
   return RichText(
     textAlign: TextAlign.center,
@@ -10,7 +12,7 @@ Widget title(BuildContext context) {
           textStyle: Theme.of(context).textTheme.headline4,
           fontSize: 30,
           fontWeight: FontWeight.w700,
-          color: Color(0xffe46b10),
+          color: isDark ? Colors.white70 : Color(0xffe46b10),
         ),
         children: [
           TextSpan(

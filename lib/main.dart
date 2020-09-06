@@ -8,6 +8,8 @@ import 'package:timeapp/src/homeScreen.dart';
 import 'src/welcomePage.dart';
 import 'package:page_transition/page_transition.dart';
 
+bool isDark = false;
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatefulWidget {
@@ -79,11 +81,19 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primaryColor: Color(0xfffbb448),
         accentColor: Color(0xffe46b10),
-        primarySwatch: Colors.blue,
         textTheme: GoogleFonts.latoTextTheme(textTheme).copyWith(
-          bodyText2: GoogleFonts.montserrat(textStyle: textTheme.bodyText2),
+          bodyText2: GoogleFonts.montserrat(
+              textStyle: textTheme.bodyText2, color: Color(0xfffbb448)),
         ),
       ),
+      darkTheme: ThemeData.dark().copyWith(
+        accentColor: Colors.grey[900],
+        textTheme: GoogleFonts.latoTextTheme(textTheme).copyWith(
+          bodyText2: GoogleFonts.montserrat(
+              textStyle: textTheme.bodyText2, color: Colors.white70),
+        ),
+      ),
+      themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
       debugShowCheckedModeBanner: false,
       home: loggedInUser == null ? WelcomePage() : HomeScreen(),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:timeapp/main.dart';
 
 Widget entryField(String title,
     {bool isPassword = false,
@@ -20,10 +21,12 @@ Widget entryField(String title,
           controller: controller,
           obscureText: isPassword,
           decoration: InputDecoration(
-              hintText: hintText,
-              border: InputBorder.none,
-              fillColor: Color(0xfff3f3f4),
-              filled: true),
+            hintText: hintText,
+            hintStyle: TextStyle(color: isDark ? Colors.black : Colors.grey),
+            border: InputBorder.none,
+            fillColor: Color(0xfff3f3f4),
+            filled: true,
+          ),
         )
       ],
     ),

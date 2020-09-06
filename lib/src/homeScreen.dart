@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:timeapp/main.dart';
 import 'package:timeapp/src/tasksScreen.dart';
 
 final _firestore = Firestore.instance;
@@ -50,6 +51,13 @@ class _HomeScreenState extends State<HomeScreen> {
               Navigator.pushReplacementNamed(context, 'welcomeScreen');
             },
           ),
+          IconButton(
+              icon: isDark ? Icon(Icons.wb_sunny) : Icon(Icons.brightness_2),
+              onPressed: () {
+                setState(() {
+                  isDark = !isDark;
+                });
+              })
         ],
       ),
       body: _isLoading ? CircularProgressIndicator() : CategoriesList(),
@@ -73,24 +81,25 @@ Widget buildCategoriesList(
         itemCount: snapshot.data.documents.length,
         itemBuilder: (context, index) {
           DocumentSnapshot category = snapshot.data.documents[index];
-          return ListTile(
-            leading: Icon(Icons.category),
-            title: Text(category.data["name"]),
-            subtitle: Text("subtitle"),
-            trailing: Icon(Icons.chevron_right),
-            onTap: () {
-              Navigator.push(
-                  context,
-                  PageTransition(
-                      type: PageTransitionType.fade,
-                      child: TasksScreen(
-                        documentID: category.documentID,
-                      )));
-            },
+          return Card(
+            child: ListTile(
+              leading: Icon(Icons.category),
+              title: Text(category.data["name"]),
+              subtitle: Text("subtitle"),
+              trailing: Icon(Icons.chevron_right),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    PageTransition(
+                        type: PageTransitionType.fade,
+                        child: TasksScreen(
+                          documentID: category.documentID,
+                        )));
+              },
+            ),
           );
         });
-  } else if (snapshot.connectionState == ConnectionState.done &&
-      !snapshot.hasData) {
+  } else if (!snapshot.hasData || snapshot.data.documents.isEmpty) {
     return Text("No Categories");
   } else {
     return CircularProgressIndicator();

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:timeapp/main.dart';
 import 'package:timeapp/src/Widget/bezierContainer.dart';
 import 'package:timeapp/src/Widget/entryField.dart';
 import 'package:timeapp/src/Widget/switchScreen.dart';
@@ -30,7 +31,9 @@ class _SignUpPageState extends State<SignUpPage> {
             borderRadius: BorderRadius.all(Radius.circular(5)),
             boxShadow: <BoxShadow>[
               BoxShadow(
-                  color: Colors.grey.shade200,
+                  color: isDark
+                      ? Theme.of(context).primaryColor.withAlpha(100)
+                      : Colors.grey.shade200,
                   offset: Offset(2, 4),
                   blurRadius: 5,
                   spreadRadius: 2)
@@ -38,10 +41,14 @@ class _SignUpPageState extends State<SignUpPage> {
             gradient: LinearGradient(
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
-                colors: [Color(0xfffbb448), Color(0xfff7892b)])),
+                colors: [
+                  Theme.of(context).primaryColor,
+                  Theme.of(context).accentColor
+                ])),
         child: Text(
           'Register Now',
-          style: TextStyle(fontSize: 20, color: Colors.white),
+          style: TextStyle(
+              fontSize: 20, color: isDark ? Colors.white70 : Colors.white),
         ),
       ),
       onTap: () async {
