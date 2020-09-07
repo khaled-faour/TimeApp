@@ -8,8 +8,6 @@ import 'package:timeapp/src/homeScreen.dart';
 import 'src/welcomePage.dart';
 import 'package:page_transition/page_transition.dart';
 
-bool isDark = false;
-
 void main() => runApp(MyApp());
 
 class MyApp extends StatefulWidget {
@@ -71,29 +69,21 @@ class _MyAppState extends State<MyApp> {
             return null;
         }
       },
-      routes: {
-        //'welcomeScreen': (context) => WelcomePage(),
-        //'loginScreen': (context) => LoginPage(),
-        //'registerScreen': (context) => SignUpPage(),
-        //'mainScreen': (context) => HomeScreen(),
-        //'forgotPasswordScreen': (context) => ForgotPasswordScreen()
-      },
       theme: ThemeData(
         primaryColor: Color(0xfffbb448),
         accentColor: Color(0xffe46b10),
-        textTheme: GoogleFonts.latoTextTheme(textTheme).copyWith(
-          bodyText2: GoogleFonts.montserrat(
-              textStyle: textTheme.bodyText2, color: Color(0xfffbb448)),
-        ),
+        textTheme: GoogleFonts.latoTextTheme(textTheme),
       ),
       darkTheme: ThemeData.dark().copyWith(
         accentColor: Colors.grey[900],
         textTheme: GoogleFonts.latoTextTheme(textTheme).copyWith(
           bodyText2: GoogleFonts.montserrat(
-              textStyle: textTheme.bodyText2, color: Colors.white70),
+              textStyle: textTheme.bodyText2, color: Colors.white),
+          bodyText1: GoogleFonts.montserrat(
+              textStyle: textTheme.bodyText1, color: Colors.white60),
         ),
       ),
-      themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
+      //themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
       debugShowCheckedModeBanner: false,
       home: loggedInUser == null ? WelcomePage() : HomeScreen(),
     );

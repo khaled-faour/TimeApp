@@ -41,7 +41,7 @@ class _TasksScreenState extends State<TasksScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("tasks"),
+        title: Text("Tasks"),
         centerTitle: true,
         actions: <Widget>[
           IconButton(
@@ -92,8 +92,16 @@ Widget buildTasksList(
           return Card(
             child: ListTile(
               leading: Icon(Icons.track_changes),
-              title: Text(task.data["name"]),
-              subtitle: Text("Description"),
+              title: Text(
+                task.data["name"],
+                style: TextStyle(
+                    color: Theme.of(context).textTheme.bodyText2.color),
+              ),
+              subtitle: Text(
+                "Description",
+                style: TextStyle(
+                    color: Theme.of(context).textTheme.bodyText1.color),
+              ),
               onTap: () {
                 print(task.data["name"] + " tapped");
               },

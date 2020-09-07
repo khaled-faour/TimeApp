@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:timeapp/main.dart';
 import 'package:timeapp/src/Widget/bezierContainer.dart';
 import 'package:timeapp/src/Widget/entryField.dart';
 import 'package:timeapp/src/Widget/switchScreen.dart';
@@ -31,7 +30,8 @@ class _SignUpPageState extends State<SignUpPage> {
             borderRadius: BorderRadius.all(Radius.circular(5)),
             boxShadow: <BoxShadow>[
               BoxShadow(
-                  color: isDark
+                  color: MediaQuery.of(context).platformBrightness ==
+                          Brightness.dark
                       ? Theme.of(context).primaryColor.withAlpha(100)
                       : Colors.grey.shade200,
                   offset: Offset(2, 4),
@@ -48,7 +48,11 @@ class _SignUpPageState extends State<SignUpPage> {
         child: Text(
           'Register Now',
           style: TextStyle(
-              fontSize: 20, color: isDark ? Colors.white70 : Colors.white),
+              fontSize: 20,
+              color:
+                  MediaQuery.of(context).platformBrightness == Brightness.dark
+                      ? Colors.white70
+                      : Colors.white),
         ),
       ),
       onTap: () async {
@@ -97,11 +101,11 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget _emailPasswordWidget() {
     return Column(
       children: <Widget>[
-        entryField("Name",
+        entryField("Name", context,
             hintText: "First and last name", controller: nameController),
-        entryField("Email id",
+        entryField("Email id", context,
             hintText: 'example@example.com', controller: emailController),
-        entryField("Password",
+        entryField("Password", context,
             isPassword: true,
             hintText: "Password",
             controller: passwordController),

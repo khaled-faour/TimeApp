@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:timeapp/main.dart';
 
 class WelcomePage extends StatefulWidget {
   @override
@@ -32,9 +31,10 @@ class _WelcomePageState extends State<WelcomePage> {
           'Login',
           style: TextStyle(
               fontSize: 20,
-              color: isDark
-                  ? Colors.black
-                  : Theme.of(context).textTheme.bodyText2.color),
+              color:
+                  MediaQuery.of(context).platformBrightness == Brightness.dark
+                      ? Colors.black
+                      : Theme.of(context).textTheme.bodyText2.color),
         ),
       ),
     );
@@ -52,12 +52,20 @@ class _WelcomePageState extends State<WelcomePage> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(5)),
           border: Border.all(
-              color: isDark ? Colors.white70 : Colors.white, width: 2),
+              color:
+                  MediaQuery.of(context).platformBrightness == Brightness.dark
+                      ? Colors.white70
+                      : Colors.white,
+              width: 2),
         ),
         child: Text(
           'Register now',
           style: TextStyle(
-              fontSize: 20, color: isDark ? Colors.white70 : Colors.white),
+              fontSize: 20,
+              color:
+                  MediaQuery.of(context).platformBrightness == Brightness.dark
+                      ? Colors.white70
+                      : Colors.white),
         ),
       ),
     );
@@ -72,7 +80,9 @@ class _WelcomePageState extends State<WelcomePage> {
             textStyle: Theme.of(context).textTheme.headline4,
             fontSize: 30,
             fontWeight: FontWeight.w700,
-            color: isDark ? Colors.white70 : Colors.white,
+            color: MediaQuery.of(context).platformBrightness == Brightness.dark
+                ? Colors.white70
+                : Colors.white,
           ),
           children: [
             TextSpan(

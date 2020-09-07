@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:timeapp/main.dart';
 
 Widget backButton(BuildContext context) {
   return InkWell(
@@ -13,13 +12,19 @@ Widget backButton(BuildContext context) {
           Container(
             padding: EdgeInsets.only(left: 0, top: 10, bottom: 10),
             child: Icon(Icons.keyboard_arrow_left,
-                color: isDark ? Colors.white70 : Colors.black),
+                color:
+                    MediaQuery.of(context).platformBrightness == Brightness.dark
+                        ? Colors.white70
+                        : Colors.black),
           ),
           Text('Back',
               style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
-                  color: isDark ? Colors.white70 : Colors.black))
+                  color: MediaQuery.of(context).platformBrightness ==
+                          Brightness.dark
+                      ? Colors.white70
+                      : Colors.black))
         ],
       ),
     ),
