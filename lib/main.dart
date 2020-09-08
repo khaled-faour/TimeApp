@@ -70,11 +70,13 @@ class _MyAppState extends State<MyApp> {
         }
       },
       theme: ThemeData(
+        brightness: Brightness.light,
         primaryColor: Color(0xfffbb448),
         accentColor: Color(0xffe46b10),
         textTheme: GoogleFonts.latoTextTheme(textTheme),
       ),
       darkTheme: ThemeData.dark().copyWith(
+        brightness: Brightness.dark,
         accentColor: Colors.grey[900],
         textTheme: GoogleFonts.latoTextTheme(textTheme).copyWith(
           bodyText2: GoogleFonts.montserrat(

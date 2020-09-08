@@ -90,6 +90,13 @@ Widget buildTasksList(
           DocumentSnapshot task = snapshot.data.documents[index];
           print(task.data.length);
           return Card(
+            margin: EdgeInsets.only(
+              left: 10,
+              right: 10,
+              top: 8,
+            ),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
             child: ListTile(
               leading: Icon(Icons.track_changes),
               title: Text(

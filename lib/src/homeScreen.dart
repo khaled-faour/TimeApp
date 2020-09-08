@@ -74,6 +74,13 @@ Widget buildCategoriesList(
         itemBuilder: (context, index) {
           DocumentSnapshot category = snapshot.data.documents[index];
           return Card(
+            margin: EdgeInsets.only(
+              left: 10,
+              right: 10,
+              top: 8,
+            ),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
             child: ListTile(
               leading: Icon(Icons.category),
               title: Text(
