@@ -1,4 +1,5 @@
 on: push
 jobs:
-- name: Flutter action
-  uses: subosito/flutter-action@v1.3.2
+  steps:
+  - name: Flutter action
+    uses: subosito/flutter-action@v1.3.2
