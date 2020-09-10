@@ -13,7 +13,8 @@ jobs:
       with:
         java-version: '12.x'
     - uses: actions/subsito/flutter-action@v1
-      with: flutter-version: '1.20.3'
+      with:
+        flutter-version: '1.20.3'
     - run: flutter pub get
     - run: flutter build apk --split-per-abi
     - name: Release aok
