@@ -22,7 +22,7 @@ jobs:
       with: 
         artifacts: "build/app/outputs/apk/release/*.apk"
         token: ${{secrets.TIMEAPP_TOKEN}}
-    -name: Firebase App Distribution
+    - name: Firebase App Distribution
       uses: wzieba/Firebase-Distribution-Github-Action@v1.2.1
       with:
         appId: ${{secrets.FIREBASE_ANDROID_ID}}
