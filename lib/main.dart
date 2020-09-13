@@ -65,6 +65,10 @@ class _MyAppState extends State<MyApp> {
             return PageTransition(
                 child: ForgotPasswordScreen(), type: PageTransitionType.fade);
             break;
+          // case 'taskDetailsScreen':
+          //   return PageTransition(
+          //       child: TaskDetailsScreen(categoryId: , taskId: ,), type: PageTransitionType.fade);
+          //   break;
           default:
             return null;
         }

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:timeapp/src/myTasks.dart';
 import 'package:timeapp/src/tasksScreen.dart';
 
 final _firestore = Firestore.instance;
@@ -36,24 +37,51 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  int _selectedIndex = 0;
+  final List<Widget> _children = [
+    CategoriesList(),
+    MyTasks(),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Categories"),
-        centerTitle: true,
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.cancel),
-            onPressed: () {
-              FirebaseAuth.instance.signOut();
-              Navigator.pushReplacementNamed(context, 'welcomeScreen');
-            },
-          ),
-        ],
-      ),
-      body: _isLoading ? CircularProgressIndicator() : CategoriesList(),
-    );
+        appBar: AppBar(
+          title: Text(_selectedIndex == 0 ? "Categories" : "My Tasks"),
+          centerTitle: true,
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.cancel),
+              onPressed: () {
+                FirebaseAuth.instance.signOut();
+                Navigator.pushReplacementNamed(context, 'welcomeScreen');
+              },
+              tooltip: "Logout",
+            ),
+          ],
+        ),
+        body: _isLoading
+            ? CircularProgressIndicator()
+            : _children[_selectedIndex],
+        bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.category),
+              title: Text('Categories'),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.account_circle),
+              title: Text('My Tasks'),
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Theme.of(context).primaryColor,
+          onTap: (int index) {
+            setState(() {
+              _selectedIndex = index;
+            });
+          },
+        ));
   }
 }
 
@@ -106,9 +134,10 @@ Widget buildCategoriesList(
             ),
           );
         });
-  } else if (!snapshot.hasData || snapshot.data.documents.isEmpty) {
+  } else if ((!snapshot.hasData || snapshot.data.documents.isEmpty) &&
+      snapshot.connectionState == ConnectionState.done) {
     return Text("No Categories");
   } else {
-    return CircularProgressIndicator();
+    return Center(child: CircularProgressIndicator());
   }
 }
