@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:timeapp/src/activeTask.dart';
 
 FirebaseUser _user;
 Firestore _firestore = Firestore.instance;
@@ -162,7 +163,22 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                                         Timestamp.now(),
                                                     "takenBy": _user.uid
                                                   }, merge: true);
-                                                  Navigator.pop(context);
+                                                  Navigator.popUntil(
+                                                      context,
+                                                      ModalRoute.withName(
+                                                          'mainScreen'));
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (BuildContext
+                                                              context) =>
+                                                          ActiveTaskScreen(
+                                                        categoryId:
+                                                            widget.categoryId,
+                                                        taskId: widget.taskId,
+                                                      ),
+                                                    ),
+                                                  );
                                                 } else {
                                                   final snackBar = SnackBar(
                                                       content: Text(

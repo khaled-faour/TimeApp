@@ -1,9 +1,14 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 Firestore _firestore = Firestore.instance;
+FirebaseUser _user;
 var _data;
+Timestamp dateNow;
+Timestamp startTime;
+Duration timeAgo;
 
 class ActiveTaskScreen extends StatefulWidget {
   final String categoryId;
@@ -16,36 +21,47 @@ class ActiveTaskScreen extends StatefulWidget {
 }
 
 class _ActiveTaskScreenState extends State<ActiveTaskScreen> {
-  Timestamp dateNow;
-  Timestamp startTime;
-  Duration timeAgo;
   @override
   void initState() {
     super.initState();
-    _data = null;
+    getCurrentUser();
     getData();
-    Timer.periodic(const Duration(seconds: 1), (Timer t) => setTime());
+    getTime();
+  }
+
+  getCurrentUser() async {
+    try {
+      _user = await FirebaseAuth.instance.currentUser();
+    } catch (e) {
+      print(e);
+    }
   }
 
   getData() async {
-    await _firestore
-        .collection("Categories")
-        .document(widget.categoryId)
-        .collection("Tasks")
-        .document(widget.taskId)
-        .get()
-        .then((value) async {
-      setState(() {
+    try {
+      await _firestore
+          .collection("Categories")
+          .document(widget.categoryId)
+          .collection("Tasks")
+          .document(widget.taskId)
+          .get()
+          .then((value) async {
         _data = value.data;
       });
-    });
+    } catch (e) {
+      print("Error: $e");
+    }
   }
 
-  setTime() {
+  void getTime() {
     setState(() {
-      dateNow = Timestamp.now();
       startTime = _data["startTime"];
-      timeAgo = dateNow.toDate().difference(startTime.toDate());
+      Timer.periodic(const Duration(seconds: 1), (Timer t) {
+        dateNow = Timestamp.now();
+        setState(() {
+          timeAgo = dateNow.toDate().difference(startTime.toDate());
+        });
+      });
     });
   }
 
@@ -125,6 +141,13 @@ class _ActiveTaskScreenState extends State<ActiveTaskScreen> {
                                 "isDone": true,
                                 "endTime": Timestamp.now()
                               }, merge: true);
+                              await _firestore
+                                  .collection("UsersTasks")
+                                  .document(_user.uid)
+                                  .updateData({
+                                "activeTask": false,
+                              });
+                              Navigator.popAndPushNamed(context, 'mainScreen');
                             },
                             icon: Icon(Icons.check),
                             label: Text(

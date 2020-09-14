@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:timeapp/src/activeTask.dart';
 import 'package:timeapp/src/myTasks.dart';
+import 'package:timeapp/src/taskDetails.dart';
 
 final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 final _firestore = Firestore.instance;
@@ -163,26 +163,17 @@ Widget buildTasksList(
                   children: [
                     RaisedButton(
                       onPressed: () {
-                        // if (task.data["isTaken"] != true) {
-                        //   return Navigator.push(
-                        //       context,
-                        //       MaterialPageRoute(
-                        //           builder: (context) => TaskDetailsScreen(
-                        //               categoryId: _documentID,
-                        //               taskId: task.documentID)));
-                        // }
-                        // final snackBar =
-                        //     SnackBar(content: Text("Task already taken!"));
-                        // _scaffoldKey.currentState.showSnackBar(snackBar);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (BuildContext context) => ActiveTaskScreen(
-                              categoryId: _documentID,
-                              taskId: task.documentID,
-                            ),
-                          ),
-                        );
+                        if (task.data["isTaken"] != true) {
+                          return Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => TaskDetailsScreen(
+                                      categoryId: _documentID,
+                                      taskId: task.documentID)));
+                        }
+                        final snackBar =
+                            SnackBar(content: Text("Task already taken!"));
+                        _scaffoldKey.currentState.showSnackBar(snackBar);
                       },
                       child: Text("START"),
                     ),
