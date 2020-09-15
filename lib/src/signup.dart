@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:timeapp/main.dart';
 import 'package:timeapp/src/Widget/bezierContainer.dart';
 import 'package:timeapp/src/Widget/entryField.dart';
 import 'package:timeapp/src/Widget/switchScreen.dart';
@@ -7,7 +8,6 @@ import 'package:timeapp/src/Widget/title.dart';
 import 'package:timeapp/src/Widget/backButton.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:timeapp/src/homeScreen.dart';
 
 class SignUpPage extends StatefulWidget {
   @override

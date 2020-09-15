@@ -6,6 +6,7 @@ import 'package:timeapp/src/Widget/backButton.dart';
 import 'package:timeapp/src/Widget/entryField.dart';
 import 'package:timeapp/src/Widget/switchScreen.dart';
 import 'package:timeapp/src/Widget/title.dart';
+import 'package:timeapp/main.dart';
 
 import 'Widget/bezierContainer.dart';
 
@@ -65,12 +66,14 @@ class _LoginPageState extends State<LoginPage> {
           _isLoading = true;
         });
         try {
-          user = (await FirebaseAuth.instance.signInWithEmailAndPassword(
-                  email: emailController.text,
-                  password: passwordController.text))
+          loggedInUser = (await FirebaseAuth.instance
+                  .signInWithEmailAndPassword(
+                      email: emailController.text,
+                      password: passwordController.text))
               .user;
-          if (user != null) {
-            final snackBar = SnackBar(content: Text("Welcome, ${user.email}"));
+          if (loggedInUser != null) {
+            final snackBar =
+                SnackBar(content: Text("Welcome, ${loggedInUser.email}"));
             _scaffoldKey.currentState.showSnackBar(snackBar);
             Navigator.pop(context);
             Navigator.pushReplacementNamed(context, 'mainScreen');

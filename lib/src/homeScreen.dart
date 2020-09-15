@@ -6,8 +6,6 @@ import 'package:timeapp/src/myTasks.dart';
 import 'package:timeapp/src/tasksScreen.dart';
 
 final _firestore = Firestore.instance;
-FirebaseUser loggedInUser;
-bool _isLoading = true;
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -15,28 +13,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  FirebaseAuth _auth = FirebaseAuth.instance;
-  @override
-  void initState() {
-    super.initState();
-    getCurrentUser();
-  }
-
-  void getCurrentUser() async {
-    try {
-      final user = await _auth.currentUser();
-      if (user != null) {
-        loggedInUser = user;
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    } catch (e) {
-      print(e);
-      return;
-    }
-  }
-
   int _selectedIndex = 0;
   final List<Widget> _children = [
     CategoriesList(),
@@ -60,9 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-        body: _isLoading
-            ? CircularProgressIndicator()
-            : _children[_selectedIndex],
+        body: _children[_selectedIndex],
         bottomNavigationBar: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(

@@ -5,9 +5,11 @@ import 'package:timeapp/src/forgotPasswordPage.dart';
 import 'package:timeapp/src/loginPage.dart';
 import 'package:timeapp/src/signup.dart';
 import 'package:timeapp/src/homeScreen.dart';
-import 'src/welcomePage.dart';
+import 'package:timeapp/src/welcomePage.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:timeapp/src/push_notification.dart';
 
+FirebaseUser loggedInUser;
 void main() => runApp(MyApp());
 
 class MyApp extends StatefulWidget {
@@ -17,8 +19,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  FirebaseUser loggedInUser;
-
+  var notificationsManager = PushNotificationsManager();
   void initState() {
     super.initState();
     getCurrentUser();
@@ -26,13 +27,19 @@ class _MyAppState extends State<MyApp> {
 
   void getCurrentUser() async {
     try {
-      final user = await FirebaseAuth.instance.currentUser();
-      if (user != null) {
+      await FirebaseAuth.instance.currentUser().then((user) {
         setState(() {
           loggedInUser = user;
         });
+      });
+      if (loggedInUser != null) {
+        setState(() {
+          notificationsManager.init();
+        });
 
         print(loggedInUser.email);
+      } else {
+        Navigator.pushReplacementNamed(context, 'welcomeScreen');
       }
     } catch (e) {
       print(e);
@@ -65,10 +72,6 @@ class _MyAppState extends State<MyApp> {
             return PageTransition(
                 child: ForgotPasswordScreen(), type: PageTransitionType.fade);
             break;
-          // case 'taskDetailsScreen':
-          //   return PageTransition(
-          //       child: TaskDetailsScreen(categoryId: , taskId: ,), type: PageTransitionType.fade);
-          //   break;
           default:
             return null;
         }
