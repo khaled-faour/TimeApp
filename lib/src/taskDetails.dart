@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:timeapp/main.dart';
 import 'package:timeapp/src/activeTask.dart';
 
 Firestore _firestore = Firestore.instance;
+FirebaseUser currentUser;
 
 final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -19,12 +20,28 @@ class TaskDetailsScreen extends StatefulWidget {
 
 class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
   var _data;
-  var _userData;
+  Map<String, dynamic> _userData;
   @override
   void initState() {
     _data = null;
     super.initState();
+    getUser();
     getData();
+  }
+
+  getUser() async {
+    try {
+      await FirebaseAuth.instance.currentUser().then((user) {
+        if (user != null) {
+          currentUser = user;
+          print(currentUser);
+        } else {
+          print("No User");
+        }
+      });
+    } catch (e) {
+      print("getUserError: $e");
+    }
   }
 
   getData() async {
@@ -41,7 +58,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
     });
     await _firestore
         .collection("UsersTasks")
-        .document(loggedInUser.uid)
+        .document(currentUser.uid)
         .get()
         .then((value) async {
       setState(() {
@@ -51,7 +68,8 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
   }
 
   confrimTask() async {
-    if (_userData["activeTask"] == true) {
+    if (_userData.containsKey("activeTask") == true &&
+        _userData["activeTask"] == true) {
       Navigator.pop(context);
       final snackBar =
           SnackBar(content: Text("Only one active task is allowed"));
@@ -59,7 +77,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
     } else {
       await _firestore
           .collection("UsersTasks")
-          .document(loggedInUser.uid)
+          .document(currentUser.uid)
           .collection("Tasks")
           .document()
           .setData({
@@ -73,12 +91,12 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
 
       await _firestore
           .collection("UsersTasks")
-          .document(loggedInUser.uid)
+          .document(currentUser.uid)
           .setData({"activeTask": true}, merge: true);
 
       _firestore
           .collection("UsersTasks")
-          .document(loggedInUser.uid)
+          .document(currentUser.uid)
           .collection("Tasks")
           .snapshots()
           .listen((snapshot) {

@@ -24,10 +24,17 @@ class _ActiveTaskScreenState extends State<ActiveTaskScreen> {
   Timestamp startTime;
   String name;
   String description;
+  Timer timer;
   @override
   void initState() {
     super.initState();
     getData();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    timer.cancel();
   }
 
   void getData() {
@@ -40,7 +47,7 @@ class _ActiveTaskScreenState extends State<ActiveTaskScreen> {
       description = value.data["description"];
       startTime = value.data["startTime"];
       avgTime = value.data["avgTime"];
-      Timer timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
+      timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
         timeNow = Timestamp.now();
         setState(() {
           timeAgo = timeNow.toDate().difference(startTime.toDate());
@@ -137,7 +144,6 @@ class _ActiveTaskScreenState extends State<ActiveTaskScreen> {
                               _firestore.updateData({
                                 "activeTask": false,
                               });
-                              getData();
                               Navigator.pop(context);
                             },
                       icon: Icon(Icons.check),

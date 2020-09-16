@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -75,6 +76,17 @@ class _LoginPageState extends State<LoginPage> {
             final snackBar =
                 SnackBar(content: Text("Welcome, ${loggedInUser.email}"));
             _scaffoldKey.currentState.showSnackBar(snackBar);
+
+            DocumentSnapshot userDocument = await Firestore.instance
+                .collection("UsersTasks")
+                .document(loggedInUser.uid)
+                .get();
+            if (!userDocument.exists) {
+              await Firestore.instance
+                  .collection("UsersTasks")
+                  .document(loggedInUser.uid)
+                  .setData({});
+            }
             Navigator.pop(context);
             Navigator.pushReplacementNamed(context, 'mainScreen');
           } else {
